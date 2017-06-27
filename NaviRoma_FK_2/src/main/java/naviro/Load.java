@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 //import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -24,6 +26,17 @@ public class Load extends HttpServlet {
 	public static final String CHAMP_Maps = "module";
 	public static final String CHAMP_data = "fichier";
 	public static final String CHAMP_box = "box";
+	public static String acsnKey = "acsn";
+	public static String acsnFile = "/idy/fichier/acsn.gmt";
+	public static String dna_repair = "/idy/fichier/dna_repair.gmt";
+	public static String EMT = "/idy/fichier/emtcellmotility.gmt";
+	public static String apoptosis = "/idy/fichier/apoptosis.gmt";
+	public static String cellcycle = "/idy/fichier/cellcycle.gmt";
+	public static String survival = "/idy/fichier/survival.gmt";
+	static final Map<String, String> FILES_BY_MAP = new HashMap<String, String>();
+	static {
+		FILES_BY_MAP.put(acsnKey, acsnFile);
+	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -36,58 +49,49 @@ public class Load extends HttpServlet {
 		/* Récupération des champs du formulaire. */
 
 		String module = request.getParameter(CHAMP_Maps);
+		String modulePathName = FILES_BY_MAP.get(module);
 		System.out.println(module);
 		String box = request.getParameter(CHAMP_box);
 		System.out.println(box);
 		// String fichier = request.getParameter( CHAMP_data );
 
-		Part part = request.getPart(CHAMP_data);
+		Part vfgfg = request.getPart(CHAMP_data);
 		// request.get
 
-		saveFile(response, part);
+		String pathname = saveFile(response, vfgfg);
 
 		System.out.println(module);
-		System.out.println(part);
+		System.out.println(vfgfg);
 		System.out.println("je suis la!!!");
 
 		/*
 		 * récupération des fichiers modules.gmt
-		 */
-		String acsn = "/idy/fichier/acsn.gmt";
-		String dna_repair = "/idy/fichier/dna_repair.gmt";
-		String EMT = "/idy/fichier/emtcellmotility.gmt";
-		String apoptosis = "/idy/fichier/apoptosis.gmt";
-		String cellcycle = "/idy/fichier/cellcycle.gmt";
-		String survival = "/idy/fichier/survival.gmt";
-
-		// utilisation de la classe ModuleActivityAnalysis
-		// ModuleActivityAnalysis activity = new ModuleActivityAnalysis();
-		// activity.moduleActivityTable();
-
-		// methode pour lancer ROMA dans mon programme
-		String arguments[] = new String[6];
-		arguments[1] = "-dataFile";
-		arguments[2] = "data.txt";
-		arguments[3] = "-moduleFile";
-		arguments[4] = "modules.gmt";
-		arguments[5] = "-centerData";
-		// ModuleActivityAnalysis.main(arguments);
-
-		/*
-		 * // try { // validationEmail( fichier ); //} catch (Exception e) { //
-		 * Gérer les erreurs de validation ici. }
+		 * 
+		 * // utilisation de la classe ModuleActivityAnalysis //
+		 * ModuleActivityAnalysis activity = new ModuleActivityAnalysis(); //
+		 * activity.moduleActivityTable();
+		 * 
+		 * // methode pour lancer ROMA dans mon programme String arguments[] =
+		 * new String[6]; arguments[1] = "-dataFile"; arguments[2] = "data.txt";
+		 * arguments[3] = "-moduleFile"; arguments[4] = "modules.gmt";
+		 * arguments[5] = "-centerData"; //
+		 * ModuleActivityAnalysis.main(arguments);
+		 * 
+		 * /* // try { // validationEmail( fichier ); //} catch (Exception e) {
+		 * // Gérer les erreurs de validation ici. }
 		 */
 
 		this.getServletContext().getRequestDispatcher("/WEB-INF/Load.jsp").forward(request, response);
 	}
 
-	private void saveFile(HttpServletResponse response, Part part) throws IOException {
+	private String saveFile(HttpServletResponse response, Part part) throws IOException {
 		final String fileName = getFileName(part);
 
 		OutputStream out = null;
 		InputStream filecontent = null;
 
-		File file = new File("/home/bka/workspace-2/NaviRoma_FK_2/upload" + File.separator + fileName);
+		String pathname = "/home/bka/workspace-2/NaviRoma_FK_2/upload" + File.separator + fileName;
+		File file = new File(pathname);
 		try {
 			out = new FileOutputStream(file);
 			filecontent = part.getInputStream();
@@ -113,6 +117,7 @@ public class Load extends HttpServlet {
 				filecontent.close();
 			}
 		}
+		return pathname;
 	}
 
 	private String getFileName(final Part part) {
