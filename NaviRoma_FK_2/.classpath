@@ -15,5 +15,6 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="lib/joda-time-2.1.jar"/>
+	<classpathentry kind="lib" path="/home/bka/Documents/project/NaviRoma/NaviRoma_FK_2/lib/roma_v1.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

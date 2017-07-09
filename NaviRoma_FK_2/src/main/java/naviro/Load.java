@@ -25,17 +25,34 @@ public class Load extends HttpServlet {
 
 	public static final String CHAMP_Maps = "module";
 	public static final String CHAMP_data = "fichier";
+	public static final String CHAMP_sample = "samples";
 	public static final String CHAMP_box = "box";
-	public static String acsnKey = "acsn";
-	public static String acsnFile = "/idy/fichier/acsn.gmt";
-	public static String dna_repair = "/idy/fichier/dna_repair.gmt";
-	public static String EMT = "/idy/fichier/emtcellmotility.gmt";
-	public static String apoptosis = "/idy/fichier/apoptosis.gmt";
-	public static String cellcycle = "/idy/fichier/cellcycle.gmt";
-	public static String survival = "/idy/fichier/survival.gmt";
+	
+	public static String acsnKey = "ACSN";
+	public static String acsnFile = "/data/users/fndao/NaviRoma/module/acsn.gmt";
+	
+	public static String dnaKey = "DNA_repair";
+	public static String dna_repair = "/data/users/fndao/NaviRoma/module/dna_repair.gmt";
+	
+	public static String cellcycKey = "CellCycle";
+	public static String cellcycle = "/data/users/fndao/NaviRoma/module/cellcycle.gmt";
+	
+	public static String survivalKey = "Survival"; 
+	public static String survival = "/data/users/fndao/NaviRoma/module/survival.gmt";
+	
+	public static String emtKey = "EMT_motility";
+	public static String EMT = "/data/users/fndao/NaviRoma/module/emtcellmotility.gmt";
+	
+	public static String apoptosisKey = "Apoptosis";
+	public static String apoptosis = "/data/users/fndao/Naviroma/module/apoptosis.gmt";
 	static final Map<String, String> FILES_BY_MAP = new HashMap<String, String>();
 	static {
+		FILES_BY_MAP.put(dnaKey, dna_repair);
 		FILES_BY_MAP.put(acsnKey, acsnFile);
+		FILES_BY_MAP.put(cellcycKey, cellcycle);
+		FILES_BY_MAP.put(survivalKey, survival);
+		FILES_BY_MAP.put(emtKey, EMT);
+		FILES_BY_MAP.put(apoptosisKey, apoptosis);
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -55,20 +72,36 @@ public class Load extends HttpServlet {
 		System.out.println(box);
 		// String fichier = request.getParameter( CHAMP_data );
 
-		Part vfgfg = request.getPart(CHAMP_data);
+		Part data = request.getPart(CHAMP_data);
+
+		Part sample = request.getPart(CHAMP_sample);
 		// request.get
 
-		String pathname = saveFile(response, vfgfg);
+		String pathname1 = saveFile(response, data);
+		String pathname2 = saveFile(response, sample);
 
+		String arguments[] = new String[6];
+		arguments[0] = "-dataFile";
+		arguments[1] = pathname1;
+		arguments[2] = "-moduleFile";
+		arguments[3] = modulePathName;
+		arguments[5] = "-sampleFile";
+		arguments[6] = pathname2;
+		arguments[7] = "-outputFolder";
+		arguments[8] = "/data/users/fndao/naviroma/output";
+		if ("checkbox1".equals(box)) {
+			arguments[4] = "-centerData";
+			arguments[5] = "1";
+		}
 		System.out.println(module);
-		System.out.println(vfgfg);
+		System.out.println(data);
 		System.out.println("je suis la!!!");
 
 		/*
 		 * récupération des fichiers modules.gmt
 		 * 
 		 * // utilisation de la classe ModuleActivityAnalysis //
-		 * ModuleActivityAnalysis activity = new ModuleActivityAnalysis(); //
+		 
 		 * activity.moduleActivityTable();
 		 * 
 		 * // methode pour lancer ROMA dans mon programme String arguments[] =

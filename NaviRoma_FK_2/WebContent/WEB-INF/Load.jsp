@@ -58,14 +58,13 @@
 				<tr>
 			
 					<td> 
-						 Select Maps: <select name = "module"> 
-					  <option selected>Maps or Modules</option>
-					  <option>acsn</option>
-					  <option>dna_repair</option>
-					  <option>cellCycle</option>
-					  <option>survival</option>
-					  <option>emt and motility</option>
-					  <option>apoptosis</option>
+						 Select Maps or Module: <select name = "module"> 
+					  <option selected>ACSN</option>
+					  <option>DNA_repair</option>
+					  <option>CellCycle</option>
+					  <option>Survival</option>
+					  <option>EMT_motility</option>
+					  <option>Apoptosis</option>
 						</select>
 					
 					</td>
